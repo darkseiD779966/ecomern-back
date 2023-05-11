@@ -8,8 +8,10 @@ require('./connection')
 const server = https.createServer(app);
 const {Server} = require('socket.io');
 const io = new Server(server, {
-  cors: 'https://ecommerce7-w4hj.onrender.com',
-  methods: ['GET', 'POST', 'PATCH', "DELETE"]
+   cors: {
+    origin: 'https://ecommerce7-w4hj.onrender.com',
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  },
 })
 
 
