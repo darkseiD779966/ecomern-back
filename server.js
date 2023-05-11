@@ -11,12 +11,9 @@ const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const imageRoutes = require('./routes/imageRoutes');
 
-const options = {
-  key: fs.readFileSync('path/to/your/ssl/key'),
-  cert: fs.readFileSync('path/to/your/ssl/cert'),
-};
 
-const server = https.createServer(options, app);
+
+const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: 'https://ecommerce7-w4hj.onrender.com',
@@ -28,7 +25,12 @@ app.use(cors({
   origin: 'https://ecommerce7-w4hj.onrender.com',
   methods: ['GET', 'POST', 'PATCH', 'DELETE'],
 }));
-
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://ecommerce7-w4hj.onrender.com');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use('/users', userRoutes);
