@@ -5,7 +5,7 @@ const http = require('http');
 require('dotenv').config();
 const stripe = require('stripe')(process.env.STRIPE_SECRET);
 require('./connection')
-const server = http.createServer(app);
+const server = https.createServer(app);
 const {Server} = require('socket.io');
 const io = new Server(server, {
   cors: 'https://ecommerce7-w4hj.onrender.com',
