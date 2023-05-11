@@ -21,7 +21,10 @@ const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const imageRoutes = require('./routes/imageRoutes');
 
-app.use(cors());
+app.use(cors({
+    origin: 'https://ecommerce7-w4hj.onrender.com',
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  }));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use('/users', userRoutes);
