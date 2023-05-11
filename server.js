@@ -2,36 +2,39 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const https = require('https');
-require('dotenv').config();
+const fs = require('fs');
 const stripe = require('stripe')(process.env.STRIPE_SECRET);
-require('./connection')
-const server = https.createServer(app);
-const {Server} = require('socket.io');
-const io = new Server(server, {
-   cors: {
-    origin: 'https://ecommerce7-w4hj.onrender.com',
-    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-  },
-})
-
-
+const { Server } = require('socket.io');
 const User = require('./models/User');
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const imageRoutes = require('./routes/imageRoutes');
 
-app.use(cors({
+const options = {
+  key: fs.readFileSync('path/to/your/ssl/key'),
+  cert: fs.readFileSync('path/to/your/ssl/cert'),
+};
+
+const server = https.createServer(options, app);
+const io = new Server(server, {
+  cors: {
     origin: 'https://ecommerce7-w4hj.onrender.com',
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-  }));
+  },
+});
+
+app.use(cors({
+  origin: 'https://ecommerce7-w4hj.onrender.com',
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+}));
+
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use('/users', userRoutes);
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
 app.use('/images', imageRoutes);
-
 
 app.post('/create-payment', async(req, res)=> {
   const {amount} = req.body;
@@ -46,12 +49,15 @@ app.post('/create-payment', async(req, res)=> {
   } catch (e) {
     console.log(e.message);
     res.status(400).json(e.message);
-   }
-})
+  }
+});
 
+io.on('connection', (socket) => {
+  console.log('a user connected');
+});
 
-server.listen(8080, ()=> {
-  console.log('server running at port', 8080)
-})
+server.listen(8080, () => {
+  console.log('server running at port', 8080);
+});
 
 app.set('socketio', io);
