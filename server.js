@@ -13,7 +13,7 @@ const imageRoutes = require('./routes/imageRoutes');
 
 
 
-const server = http.createServer(app);
+const server = https.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: 'https://ecommerce7-w4hj.onrender.com',
