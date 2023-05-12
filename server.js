@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const stripe = require('stripe')(process.env.STRIPE_SECRET);
 const { Server } = require('socket.io');
@@ -13,7 +13,7 @@ const imageRoutes = require('./routes/imageRoutes');
 const mongoose=require("mongoose");
 
 const connectionStr = "mongodb+srv://ibrahimdarkseid:inayA2520@cluster0.e1n8pqg.mongodb.net/test";
-const server = http.createServer(app);
+const server = https.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: 'https://ecommerce7-w4hj.onrender.com',
