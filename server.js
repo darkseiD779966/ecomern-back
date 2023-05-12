@@ -1,9 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const https = require('https');
+const http = require('http');
 const fs = require('fs');
-require('dotenv').config();
 const stripe = require('stripe')(process.env.STRIPE_SECRET);
 const { Server } = require('socket.io');
 const User = require('./models/User');
@@ -11,10 +10,10 @@ const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const imageRoutes = require('./routes/imageRoutes');
+const mongoose=require("mongoose");
 
-
-
-const server = https.createServer(app);
+const connectionStr = "mongodb+srv://ibrahimdarkseid:inayA2520@cluster0.e1n8pqg.mongodb.net/test";
+const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: 'https://ecommerce7-w4hj.onrender.com',
@@ -30,7 +29,13 @@ app.use('/users', userRoutes);
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
 app.use('/images', imageRoutes);
+mongoose.connect(connectionStr, {useNewUrlparser: true})
+.then(() => console.log('connected to mongodb'))
+.catch(err => console.log(err))
 
+mongoose.connection.on('error', err => {
+  console.log(err)
+})
 app.post('/create-payment', async(req, res)=> {
   const {amount} = req.body;
   console.log(amount);
@@ -51,8 +56,11 @@ io.on('connection', (socket) => {
   console.log('a user connected');
 });
 
-server.listen(8080, () => {
-  console.log('server running at port', 8080);
+server.listen(4000, () => {
+  console.log('server running at port', 4000);
 });
 
+
+
 app.set('socketio', io);
+
