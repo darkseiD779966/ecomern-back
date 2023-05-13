@@ -16,12 +16,27 @@ const connectionStr = "mongodb+srv://ibrahimdarkseid:inayA2520@cluster0.e1n8pqg.
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: 'https://ecommerce7-w4hj.onrender.com',
-    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    origin: 'https://ec7.onrender.com',
+
   },
 });
+const allowedOrigins = ['https://ec7.onrender.com'];
 
-app.use(cors());
+// Enable CORS with the allowed origins
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    // Check if the origin is allowed
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified origin.';
+      return callback(new Error(msg), false);
+    }
+
+    return callback(null, true);
+  }
+}));
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
