@@ -3,7 +3,9 @@ const cors = require('cors');
 const app = express();
 const http = require('http');
 const fs = require('fs');
-const stripe = require('stripe')(process.env.STRIPE_SECRET);
+const { Stripe } = require('stripe');
+const stripe = new Stripe('sk_test_51N7DVKSJofQOAmXRyvIkzKHhfOdrTzkVYPKrp4hQkNhx6l4Pu1Lzh0880tEKCcviDDnzw5fDc52332K84p4vPJeR00ZXT58Ijj');
+
 const { Server } = require('socket.io');
 const User = require('./models/User');
 const userRoutes = require('./routes/userRoutes');
@@ -16,27 +18,12 @@ const connectionStr = "mongodb+srv://ibrahimdarkseid:inayA2520@cluster0.e1n8pqg.
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: 'https://ec7.onrender.com',
-
+    origin: '*',
+    methods: "*",
   },
 });
-const allowedOrigins = ['https://ec7.onrender.com'];
 
-// Enable CORS with the allowed origins
-app.use(cors({
-  origin: function(origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-
-    // Check if the origin is allowed
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified origin.';
-      return callback(new Error(msg), false);
-    }
-
-    return callback(null, true);
-  }
-}));
+app.use(cors());
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
@@ -57,7 +44,9 @@ app.post('/create-payment', async(req, res)=> {
   try {
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
-      currency: 'usd',
+    description:"amxon",
+  
+      currency: 'inr',
       payment_method_types: ['card']
     });
     res.status(200).json(paymentIntent)
