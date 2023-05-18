@@ -4,7 +4,7 @@ const app = express();
 const http = require('http');
 const fs = require('fs');
 const { Stripe } = require('stripe');
-const stripe = new Stripe('sk_test_51N7DVKSJofQOAmXRyvIkzKHhfOdrTzkVYPKrp4hQkNhx6l4Pu1Lzh0880tEKCcviDDnzw5fDc52332K84p4vPJeR00ZXT58Ijj');
+const stripe = new Stripe('sk_test_51N7DVKSJofQOAmXRCMFbGQflRbiqnLTVNfZaW2zXq9xOg2fCoNLnunZCAU4Y4gf7EyegpPISDNweOLaH3hWLQFH100sqJWZN6w');
 
 const { Server } = require('socket.io');
 const User = require('./models/User');
